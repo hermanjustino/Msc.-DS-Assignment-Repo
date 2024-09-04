@@ -1,0 +1,68 @@
+---
+title: "NYPD_shooting"
+author: "H. Justino"
+date: '2024-08-30'
+output:
+  html_document:
+    df_print: paged
+---
+
+# NYPD Shooting Info
+
+
+### Import Data into variable
+```{r, import_data_check, message=FALSE}
+file_path <- "../datasets/NYPD_Shooting_Incident_Data__Historic_.csv"
+if (file.exists(file_path)) {
+  nypd_data <- read.csv(file_path)
+} else {
+  stop("File not found: ", file_path)
+}
+```
+
+### Summarize NYPD data
+```{r, summarize, message=FALSE}
+summary(nypd_data)
+```
+
+#Select Columns
+```{r, select_columns}
+# Select relevant columns and filter out rows with NA or invalid values
+library(dplyr)
+
+nypd_data_filtered <- nypd_data %>%
+  select(Longitude, Latitude, INCIDENT_KEY) %>%
+  filter(!is.na(Longitude) & !is.na(Latitude) & Longitude >= -180 & Longitude <= 180 & Latitude >= -90 & Latitude <= 90)
+```
+
+# Plot points on the map
+```{r, plot_map}
+library(leaflet)
+
+# Create a leaflet map
+leaflet(nypd_data_filtered) %>%
+  addTiles() %>%
+  addCircleMarkers(~Longitude, ~Latitude, popup = ~as.character(INCIDENT_KEY), color = "red", radius = 5)
+```
+
+# Pie chart based on Victim Sex
+```{r, victim_sex}
+library(ggplot2)
+
+# Summarize data for pie chart
+vic_sex_summary <- nypd_data %>%
+  filter(!is.na(VIC_SEX)) %>%
+  group_by(VIC_SEX) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100) %>%
+  filter(percentage >= 0.5)  # Filter out categories with less than 0.5% 
+
+# Create pie chart
+ggplot(vic_sex_summary, aes(x = "", y = count, fill = VIC_SEX)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start = 0) +
+  theme_void() +
+  geom_text(aes(label = paste0(round(percentage, 1), "% (", count, ")")), 
+            position = position_stack(vjust = 0.5)) +
+  labs(title = "Distribution of Victim Sex", fill = "Victim Sex")
+```
