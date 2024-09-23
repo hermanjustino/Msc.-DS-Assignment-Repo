@@ -66,3 +66,20 @@ ggplot(vic_sex_summary, aes(x = "", y = count, fill = VIC_SEX)) +
             position = position_stack(vjust = 0.5)) +
   labs(title = "Distribution of Victim Sex", fill = "Victim Sex")
 ```
+# Display Crime Rate by Borough
+```{r, crime_rate_by_borough}
+  
+  # Summarize data to calculate crime rate by borough
+borough_summary <- nypd_data %>%
+  filter(!is.na(BORO)) %>%
+  group_by(BORO) %>%
+  summarise(crime_count = n()) %>%
+  mutate(crime_rate = crime_count / sum(crime_count) * 100)
+
+# Create bar chart for crime rate by borough
+ggplot(borough_summary, aes(x = reorder(BORO, -crime_rate), y = crime_rate, fill = BORO)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = paste0(round(crime_rate, 1), "%")), vjust = -0.5) +
+  labs(title = "Percentage of Crime by Borough", x = "Borough", y = "Percentage of All Crime (%)") +
+  theme_minimal()
+```
