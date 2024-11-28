@@ -6,8 +6,27 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
-// Load filtered GeoJSON data
-var geojsonLayer = new L.GeoJSON.AJAX("../data/filtered_neighbourhoods.geojson", {
+// Define the list of specific neighborhoods to be colored orange
+var specificNeighborhoods = [
+    //Bloor Street
+    "Annex",
+    "Palmerston-Little Italy", "Dufferin Grove", "Dovercourt Village", 
+     "Seaton Village", "High Park-Swansea", "Roncesvalles", "Rosedale-Moore Park", "Lambton Baby Point", "High Park North",
+    "Junction-Wallace Emerson", "Stonegate-Queensway", "Kingsway South", "Runnymede-Bloor West Village", "Church-Wellesley",
+
+    // Yonge Street 
+    "Yonge-St. Clair", "Church and Wellesley", "South Eglinton-Davisville",
+    "Downtown Yonge East", "St Lawrence-East Bayfront-The Islands", "Bay-Cloverhill", "North St.James Town",
+    "Yonge-St.Clair",
+
+    // University Avenue
+    "Grange Park", "Chinatown", "Bay Street Corridor", "Financial District", 
+    "Entertainment District", "Queen's Park", "Discovery District", "Yonge-Bay Corridor", "Kensington-Chinatown",
+    "University", "Bay-Cloverhill",
+];
+
+// Load GeoJSON data
+var geojsonLayer = new L.GeoJSON.AJAX("../data/neighbourhoods.geojson", {
     onEachFeature: function (feature, layer) {
         if (feature.properties && feature.properties.AREA_NAME) {
             layer.bindPopup("Neighbourhood: " + feature.properties.AREA_NAME);
@@ -18,8 +37,12 @@ var geojsonLayer = new L.GeoJSON.AJAX("../data/filtered_neighbourhoods.geojson",
         }
     },
     style: function (feature) {
+        var areaName = feature.properties.AREA_NAME;
+        var isSpecific = specificNeighborhoods.includes(areaName);
+        console.log(`Neighborhood: ${areaName}, Is Specific: ${isSpecific}`);
+        var color = isSpecific ? "#ff7800" : "#0000ff";
         return {
-            color: "#ff7800",
+            color: color,
             weight: 2,
             opacity: 1
         };
@@ -101,6 +124,9 @@ function loadChart(neighborhood) {
         return;
     }
 
+    // Set the neighborhood name in the modal
+    document.getElementById('neighborhoodName').textContent = neighborhood;
+
     // Normalize the neighborhood name
     var normalizedNeighborhood = neighborhood.trim().toLowerCase();
     console.log("Normalized neighborhood:", normalizedNeighborhood);
@@ -176,6 +202,13 @@ function loadChart(neighborhood) {
             }
         });
     }
+
+    // Adjust the chart size to fit the modal
+    var chartContainer = document.getElementById('radialChart').parentElement;
+    var chartHeight = chartContainer.clientHeight - 40; // Adjust height to fit within the modal content
+    var chartWidth = chartContainer.clientWidth;
+    document.getElementById('radialChart').style.height = chartHeight + 'px';
+    document.getElementById('radialChart').style.width = chartWidth + 'px';
 
     // Display the modal
     modal.style.display = "block";
