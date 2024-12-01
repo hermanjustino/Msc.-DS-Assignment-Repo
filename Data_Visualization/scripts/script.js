@@ -1,5 +1,5 @@
 // Initialize the map with actual values
-var map = L.map('map').setView([43.70011, -79.4163], 12); //Coordinates for Toronto, Canada
+var map = L.map('map').setView([43.70011, -79.4163], 12); // Coordinates for Toronto, Canada
     
 // Add a tile layer
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -8,10 +8,10 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 // Define the list of specific neighborhoods to be colored orange
 var specificNeighborhoods = [
-    //Bloor Street
+    // Bloor Street
     "Annex",
     "Palmerston-Little Italy", "Dufferin Grove", "Dovercourt Village", 
-     "Seaton Village", "High Park-Swansea", "Roncesvalles", "Rosedale-Moore Park", "Lambton Baby Point", "High Park North",
+    "Seaton Village", "High Park-Swansea", "Roncesvalles", "Rosedale-Moore Park", "Lambton Baby Point", "High Park North",
     "Junction-Wallace Emerson", "Stonegate-Queensway", "Kingsway South", "Runnymede-Bloor West Village", "Church-Wellesley",
 
     // Yonge Street 
@@ -85,13 +85,7 @@ fetch('../data/neighborhood_data.json')
         return response.json();
     })
     .then(data => {
-        // Normalize the keys in the neighborhoodData object
-        neighborhoodData = {};
-        for (var key in data) {
-            if (data.hasOwnProperty(key)) {
-                neighborhoodData[key.trim().toLowerCase()] = data[key];
-            }
-        }
+        neighborhoodData = data;
         console.log("Neighborhood data loaded:", neighborhoodData);
     })
     .catch(error => {
@@ -116,6 +110,11 @@ function generateGradientColors(numColors) {
     return colors;
 }
 
+// Function to normalize neighborhood names
+function normalizeNeighborhoodName(name) {
+    return name.trim().toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '');
+}
+
 // Function to load the chart
 function loadChart(neighborhood) {
     console.log("loadChart called with neighborhood:", neighborhood);
@@ -124,60 +123,56 @@ function loadChart(neighborhood) {
         return;
     }
 
+    // Get the selected data type from the dropdown
+    var dataType = document.getElementById('dataSelect').value;
+
     // Set the neighborhood name in the modal
     document.getElementById('neighborhoodName').textContent = neighborhood;
 
     // Normalize the neighborhood name
-    var normalizedNeighborhood = neighborhood.trim().toLowerCase();
+    var normalizedNeighborhood = normalizeNeighborhoodName(neighborhood);
     console.log("Normalized neighborhood:", normalizedNeighborhood);
 
-    // Initialize arrays to store age groups and populations
-    var ageGroups = [];
-    var populations = [];
+    // Get the selected data object
+    var selectedData = neighborhoodData[dataType];
+    if (!selectedData) {
+        console.error("Selected data type not found:", dataType);
+        return;
+    }
 
-    // Iterate through each age group in the neighborhoodData object
-    for (var ageGroup in neighborhoodData) {
-        if (ageGroup.toLowerCase().includes("total")) {
-            continue; // Skip the "total" age group
-        }
-        if (neighborhoodData.hasOwnProperty(ageGroup)) {
-            var populationData = neighborhoodData[ageGroup];
-            console.log(`Age Group: ${ageGroup}, Population Data:`, populationData); // Add this line
+    // Set the description in the modal
+    document.getElementById('dataDescription').textContent = selectedData.description;
 
-            // Print the keys of the population data object
-            console.log("Keys in Population Data:", Object.keys(populationData));
+    // Initialize arrays to store data
+    var labels = [];
+    var data = [];
 
-            // Normalize the keys in the population data object
-            var normalizedPopulationData = {};
-            for (var key in populationData) {
-                if (populationData.hasOwnProperty(key)) {
-                    normalizedPopulationData[key.trim().toLowerCase()] = populationData[key];
-                }
-            }
-            console.log("Normalized Population Data:", normalizedPopulationData);
+    // Iterate through the categories in the selected data object
+    for (var category in selectedData.categories) {
+        if (selectedData.categories.hasOwnProperty(category)) {
+            var categoryData = selectedData.categories[category];
+            var value = categoryData[neighborhood];
 
-            var population = normalizedPopulationData[normalizedNeighborhood];
+            // Add debugging statement to check data
+            console.log(`Category: ${category}, Value: ${value}`);
 
-            // Add debugging statement to check population data
-            console.log(`Age Group: ${ageGroup}, Population: ${population}`);
-
-            // Add the age group and population to the arrays
-            ageGroups.push(ageGroup);
-            populations.push(population);
+            // Add the category and value to the arrays
+            labels.push(category);
+            data.push(value);
         }
     }
 
-    // Print the neighborhood and populations to the console
+    // Print the neighborhood and data to the console
     console.log("Neighborhood:", neighborhood);
-    console.log("Populations:", populations);
+    console.log("Data:", data);
 
-    // Generate gradient colors based on the number of age groups
-    var backgroundColors = generateGradientColors(ageGroups.length);
+    // Generate gradient colors based on the number of labels
+    var backgroundColors = generateGradientColors(labels.length);
 
     if (radialChart) {
         // Update the existing chart
-        radialChart.data.labels = ageGroups;
-        radialChart.data.datasets[0].data = populations;
+        radialChart.data.labels = labels;
+        radialChart.data.datasets[0].data = data;
         radialChart.data.datasets[0].backgroundColor = backgroundColors;
         radialChart.update();
     } else {
@@ -186,10 +181,10 @@ function loadChart(neighborhood) {
         radialChart = new Chart(ctx, {
             type: 'polarArea',
             data: {
-                labels: ageGroups,
+                labels: labels,
                 datasets: [{
-                    label: 'Population',
-                    data: populations,
+                    label: dataType,
+                    data: data,
                     backgroundColor: backgroundColors
                 }]
             },
@@ -213,3 +208,16 @@ function loadChart(neighborhood) {
     // Display the modal
     modal.style.display = "block";
 }
+
+// Add event listener to the dropdown to reload the chart when the selection changes
+document.getElementById('dataSelect').addEventListener('change', function() {
+    if (radialChart) {
+        radialChart.destroy();
+        radialChart = null;
+    }
+    // Reload the chart with the new data type
+    var neighborhood = document.getElementById('neighborhoodName').textContent;
+    if (neighborhood) {
+        loadChart(neighborhood);
+    }
+});
