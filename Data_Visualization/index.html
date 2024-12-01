@@ -10,11 +10,16 @@
 <body>
     <h1>Interactive Neighbourhood Map</h1>
     <div id="map"></div>
-    <div id="radial-chart-container"></div>
     <div id="myModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <div id="neighborhoodName" style="float: left; font-size: 24px; font-weight: bold;"></div>
+            <div style="clear: both;"></div>
+            <label for="dataSelect">Select Data:</label>
+            <select id="dataSelect">
+                <option value="age">Age Population</option>
+                <option value="commuting">Commuting Time</option>
+            </select>
             <canvas id="radialChart" width="400" height="400"></canvas>
         </div>
     </div>

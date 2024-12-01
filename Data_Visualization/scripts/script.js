@@ -1,5 +1,5 @@
 // Initialize the map with actual values
-var map = L.map('map').setView([43.70011, -79.4163], 13); // Example coordinates for Toronto, Canada
+var map = L.map('map').setView([43.70011, -79.4163], 12); //Coordinates for Toronto, Canada
     
 // Add a tile layer
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
