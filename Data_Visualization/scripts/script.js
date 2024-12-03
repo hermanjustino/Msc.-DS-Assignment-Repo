@@ -39,7 +39,6 @@ var geojsonLayer = new L.GeoJSON.AJAX("../data/neighbourhoods.geojson", {
     style: function (feature) {
         var areaName = feature.properties.AREA_NAME;
         var isSpecific = specificNeighborhoods.includes(areaName);
-        console.log(`Neighborhood: ${areaName}, Is Specific: ${isSpecific}`);
         var color = isSpecific ? "#ff7800" : "#0000ff";
         return {
             color: color,
@@ -152,9 +151,6 @@ function loadChart(neighborhood) {
         if (selectedData.categories.hasOwnProperty(category)) {
             var categoryData = selectedData.categories[category];
             var value = categoryData[neighborhood];
-
-            // Add debugging statement to check data
-            console.log(`Category: ${category}, Value: ${value}`);
 
             // Add the category and value to the arrays
             labels.push(category);

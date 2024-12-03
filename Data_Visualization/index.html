@@ -1,14 +1,40 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Interactive Neighbourhood Map</title>
+    <title>Pedaling Through Policy</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="./styles/style.css" />
 </head>
+
 <body>
-    <h1>Interactive Neighbourhood Map</h1>
+    <h1>Pedaling Through Policy: A Data-Driven Look at Toronto’s Bike Lane Debate</h1>
+    <p>In recent years, urban infrastructure planning has become a focal point of debates surrounding sustainable city
+        living. One prominent discussion in Toronto is the provincial government’s proposal to remove bike lanes along
+        Yonge, Bloor, and University Streets. These streets are central to the city's downtown core and serve as vital
+        thoroughfares for commuters, cyclists, and pedestrians alike. The removal of bike lanes raises questions about
+        its potential impact on the neighborhoods these streets traverse, including changes to commute patterns,
+        accessibility, and the quality of life for residents.
+        This article explores the characteristics of the neighborhoods directly affected by the proposed
+        changes using data from the 2021 Census, sourced from the City of Toronto’s open data portal. By analyzing
+        demographics, commute patterns, and socio-economic factors, this analysis aims to provide a data-driven
+        perspective on the implications of this decision.</p>
+
+    <p>
+        Task Overview
+        The primary objective of this project is to create a visualization-rich, interactive article to assess the
+        impact of bike lane removal on affected neighborhoods. The article uses data visualization techniques to:
+        Explore Demographics: Highlight age, income, education, and work industry distributions across neighborhoods
+        along Yonge, Bloor, and University Streets.
+        Analyze Commute Patterns: Examine how residents of these neighborhoods travel, including the proportion of
+        cycling commuters and the average commute times.
+        Profile Neighborhoods: Compare these neighborhoods to city-wide trends, emphasizing their unique attributes and
+        potential vulnerabilities to bike lane removal.
+        The visualizations serve to make complex data accessible to a broader audience, including city planners,
+        policymakers, and residents interested in understanding the local impact of this controversial policy proposal.
+    </p>
     <div id="map"></div>
     <div id="myModal" class="modal">
         <div class="modal-content">
@@ -19,13 +45,21 @@
             <select id="dataSelect">
                 <option value="ageGroups">Age Population</option>
                 <option value="commutingTime">Commuting Time</option>
+                <option value="incomeGroups">Income Groups</option>
             </select>
             <canvas id="radialChart" width="400" height="400"></canvas>
         </div>
     </div>
+    <p>
+        All visualizations were created using Python and interactive visualization libraries such as Altair. Data was
+        preprocessed to ensure accuracy and clarity, with missing values handled through appropriate imputation methods.
+        The article incorporates user feedback gathered through formative evaluations, ensuring the content resonates
+        with its target audience.
+    </p>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-ajax/dist/leaflet.ajax.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
     <script src="./scripts/script.js"></script>
 </body>
+
 </html>
