@@ -6,11 +6,21 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <link rel="stylesheet" href="./styles/style.css" />
+    <link rel="stylesheet" href="../styles/style.css" />
 </head>
 
 <body>
     <h1>Pedaling Through Policy: A Data-Driven Look at Toronto’s Bike Lane Debate</h1>
+    <p class="byline">By <a href="https://hermanjustino.com" class="author-link"><span class="author-name">Herman
+                Justino</span></a></p>
+    <div class="author-info">
+        <div class="author-details">
+            <p class="publish-date">Published on: December 5th, 2024</p>
+        </div>
+    </div>
+    <a href="https://hermanjustino.com">
+        <img src="./assets/HermanJustino.webp" alt="Author Image" class="author-image">
+    </a>
     <p>In recent years, urban infrastructure planning has become a focal point of debates surrounding sustainable city
         living. One prominent discussion in Toronto is the provincial government’s proposal to remove bike lanes along
         Yonge, Bloor, and University Streets. These streets are central to the city's downtown core and serve as vital
@@ -20,20 +30,7 @@
         This article explores the characteristics of the neighborhoods directly affected by the proposed
         changes using data from the 2021 Census, sourced from the City of Toronto’s open data portal. By analyzing
         demographics, commute patterns, and socio-economic factors, this analysis aims to provide a data-driven
-        perspective on the implications of this decision.</p>
-
-    <p>
-        Task Overview
-        The primary objective of this project is to create a visualization-rich, interactive article to assess the
-        impact of bike lane removal on affected neighborhoods. The article uses data visualization techniques to:
-        Explore Demographics: Highlight age, income, education, and work industry distributions across neighborhoods
-        along Yonge, Bloor, and University Streets.
-        Analyze Commute Patterns: Examine how residents of these neighborhoods travel, including the proportion of
-        cycling commuters and the average commute times.
-        Profile Neighborhoods: Compare these neighborhoods to city-wide trends, emphasizing their unique attributes and
-        potential vulnerabilities to bike lane removal.
-        The visualizations serve to make complex data accessible to a broader audience, including city planners,
-        policymakers, and residents interested in understanding the local impact of this controversial policy proposal.
+        perspective on the implications of this decision.
     </p>
     <div id="map"></div>
     <div id="myModal" class="modal">
@@ -47,15 +44,46 @@
                 <option value="commutingTime">Commuting Time</option>
                 <option value="incomeGroups">Income Groups</option>
             </select>
-            <canvas id="radialChart" width="400" height="400"></canvas>
+            <canvas id="radialChart"></canvas>
         </div>
     </div>
+
+    <h1>Task Overview</h1>
+    <p>The primary objective of this project is to create a visualization-rich, interactive article to assess the
+        impact of bike lane removal on affected neighborhoods. The article uses data visualization techniques to:</p>
+    <ul>
+        <li>Explore Demographics:
+            <ul>
+                <li>Highlight age</li>
+                <li>Income</li>
+                <li>Education</li>
+                <li>Work industry distributions across neighborhoods along Yonge, Bloor, and University Streets</li>
+            </ul>
+        </li>
+    </ul>
+    <p>
     <p>
         All visualizations were created using Python and interactive visualization libraries such as Altair. Data was
         preprocessed to ensure accuracy and clarity, with missing values handled through appropriate imputation methods.
         The article incorporates user feedback gathered through formative evaluations, ensuring the content resonates
         with its target audience.
     </p>
+
+    <div class="horizontal-line-container">
+        <div class="horizontal-line"></div>
+    </div>
+
+    <h2>References</h2>
+    <ul>
+        <li>City of Toronto Open Data Portal. (2021). Toronto Neighbourhood Profiles. Retrieved from <a
+                href="https://open.toronto.ca/dataset/neighbourhoods/"
+                class="author-link">https://open.toronto.ca/dataset/neighbourhoods/.</a>
+        </li>
+        <li>Statistics Canada. (2021). 2021 Census Data for Toronto. Retrieved from <a
+            href="https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/details/page.cfm?Lang=E&GENDERlist=1,2,3&STATISTIClist=1,4&HEADERlist=0&DGUIDlist=2021A00053520005&SearchText=toronto"
+            class="author-link">https://www12.statcan.gc.ca/</a>
+    </li>
+    </ul>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-ajax/dist/leaflet.ajax.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
