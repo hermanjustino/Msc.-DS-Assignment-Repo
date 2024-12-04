@@ -1,14 +1,18 @@
 html {
+    width: 100%;
     padding: 20px;
     display: flex;
     justify-content: center; /* Center the content horizontally */
+    align-items: center; 
 }
 
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
     display: flex;
-    flex-direction: column;/* Center all content horizontally */
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center; 
     margin: 0;
     padding: 0;
     width: 100%;
@@ -17,20 +21,28 @@ body {
 h1 {
     font-size: 2.5em;
     margin-bottom: 10px;
-    text-align: left;
+}
+
+p{
+    width: 100%;
+}
+
+.author-info-container{
+    width: 100%;
+    justify-content: center;
 }
 
 .byline {
     font-size: 1em;
     color: #555;
-    margin-bottom: 5px;
-    text-align: left;
+    margin-bottom: 10px;
+    align-items: center; 
 }
 
 .author-info {
     display: flex;
-    align-items: left;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    align-items: center; 
 }
 
 .author-image {
@@ -67,20 +79,54 @@ h1 {
 #map {
     height: 600px;
     width: 100%;
+    margin: 20px 0;
 }
 
-/* Horizontal line styles */
 .horizontal-line-container {
     display: flex;
     align-items: center; /* Center the horizontal line vertically */
     justify-content: center; /* Center the horizontal line horizontally */
-    height: 100px; /* Adjust the height as needed */
+    height: 50px; /* Adjust the height as needed */
 }
 
 .horizontal-line {
-    border-top: .5px solid #000; /* Change to border-top for a horizontal line */
-    width: 85%; /* Adjust width as needed */
+    border-top: 2px solid #000; /* Change to border-top for a horizontal line */
+    width: 80%; /* Adjust width as needed */
     margin: 0 auto; /* Center the line horizontally */
+    height: 1px;
+}
+
+#searchInput {
+    width: 80%;
+    padding: 10px;
+    margin: 20px 0;
+    font-size: 1em;
+}
+
+#neighborhoodTable {
+    width: 80%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    text-align: left;
+}
+
+#neighborhoodTable th, #neighborhoodTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+#neighborhoodTable th {
+    cursor: pointer;
+    background-color: #f2f2f2;
+}
+
+#neigborhoodTable thead tr th {
+    text-align: left;
+}
+
+#neighborhoodTable th:hover {
+    background-color: #ddd;
 }
 
 /* Modal styles */
@@ -129,10 +175,31 @@ h1 {
     }
 
     .horizontal-line {
-        border-top: 0.5px solid #717171;
+        border-top: 1.5px solid #717171;
+        height: 1px;
         width: 85%;
         margin: 20px auto;
         padding-top: 10px; /* Adjust padding as needed */
         padding-bottom: 10px; /* Adjust padding as needed */
+    }
+
+    h1 {
+        width: 70%;
+    }
+
+    .author-info-container {
+        width: 70%;
+    }
+
+    p{
+        width: 70%;
+    }
+
+    #searchInput {
+        width: 70%;
+    }
+
+    #neighborhoodTable {
+        width: 70%;
     }
 }

@@ -10,6 +10,7 @@
 </head>
 
 <body>
+    <div class="author-info-container">
     <h1>Pedaling Through Policy: A Data-Driven Look at Toronto’s Bike Lane Debate</h1>
     <p class="byline">By <a href="https://hermanjustino.com" class="author-link"><span class="author-name">Herman
                 Justino</span></a></p>
@@ -21,6 +22,7 @@
     <a href="https://hermanjustino.com">
         <img src="./assets/HermanJustino.webp" alt="Author Image" class="author-image">
     </a>
+</div>
     <p>In recent years, urban infrastructure planning has become a focal point of debates surrounding sustainable city
         living. One prominent discussion in Toronto is the provincial government’s proposal to remove bike lanes along
         Yonge, Bloor, and University Streets. These streets are central to the city's downtown core and serve as vital
@@ -61,7 +63,21 @@
             </ul>
         </li>
     </ul>
-    <p>
+    
+    <h2>Search Neighborhoods</h2>
+    <input type="text" id="searchInput" placeholder="Search for neighborhoods...">
+    <table id="neighborhoodTable">
+        <thead>
+            <tr>
+                <th onclick="sortTable('name')">Name</th>
+                <th onclick="sortTable('population')">Population</th>
+            </tr>
+        </thead>
+        <tbody id="neighborhoodList">
+            <!-- Neighborhoods will be populated here by JavaScript -->
+        </tbody>
+    </table>
+
     <p>
         All visualizations were created using Python and interactive visualization libraries such as Altair. Data was
         preprocessed to ensure accuracy and clarity, with missing values handled through appropriate imputation methods.
@@ -88,6 +104,7 @@
     <script src="https://unpkg.com/leaflet-ajax/dist/leaflet.ajax.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
     <script src="./scripts/script.js"></script>
+    <script src="./scripts/search.js"></script>
 </body>
 
 </html>
