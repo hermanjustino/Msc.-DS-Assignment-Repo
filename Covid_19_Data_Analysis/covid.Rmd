@@ -1,14 +1,19 @@
 ---
-title: "Importing Data"
+title: "Covid 19 Statistical Analysis"
 author: "H. Justino"
-date: '2024-08-27'
+date: '2024-12-07'
 output:
   html_document: default
   pdf_document: default
 ---
 
-### Import the various csv files into r variables
-```{r, import_data, message=FALSE}
+
+## I want to understand if the deaths and cases of Covid 19 are consistent across States
+## Note: I will provide a link to the github repo because I needed an absolute path to the datasets. Results will be reproducible.
+#### Github Link: https://github.com/hermanjustino/Msc.-DS-Assignment-Repo/tree/main/Covid_19_Data_Analysis
+
+#### Data is coming from Johns Hopkins University
+```{r, import_data, message=FALSE, echo=FALSE, warning=FALSE}
 global_cases <- read.csv("../datasets/time_series_covid19_confirmed_global.csv")
 global_deaths <- read.csv("../datasets/time_series_covid19_deaths_global.csv")
 us_cases <- read.csv("../datasets/time_series_covid19_confirmed_US.csv")
@@ -16,7 +21,9 @@ us_deaths <- read.csv("../datasets/time_series_covid19_deaths_US.csv")
 ```
 
 ### Tidy global cases
-```{r, tidy_global_cases}
+
+### These are US cases. It will include where the case was recorded, whether or not it was fatal.
+```{r, tidy_global_cases, echo=FALSE, warning=FALSE}
 library(tidyselect)
 library(tidyr)
 library(dplyr)
@@ -29,7 +36,7 @@ global_cases <- global_cases %>%
 ```
 
 ## tidy global deaths
-```{r, tidy_global_deaths}
+```{r, tidy_global_deaths, echo=FALSE, warning=FALSE}
 library(tidyselect)
 library(tidyr)
 library(dplyr)
@@ -41,13 +48,15 @@ global_deaths <- global_deaths %>%
   select(-c(Lat, Long))
 ```
 
-```{r, inspect_date_column}
+
+#### First few rows of global cases. Country, status
+```{r, inspect_date_column, echo=FALSE, warning=FALSE}
 # Inspect the date column
 head(global_cases$date)
 ```
 
 ## Join Cases with deaths
-```{r, join_global_tables}
+```{r, join_global_tables, echo=FALSE, warning=FALSE}
 # Load necessary libraries
 library(dplyr)
 library(lubridate)
@@ -63,7 +72,7 @@ global <- global_cases %>%
 
 
 ### Tidy Us Cases
-```{r, tidy_us_cases}
+```{r, tidy_us_cases, echo=FALSE, warning=FALSE}
 library(dplyr)
 library(lubridate)
 library(tidyr)
@@ -79,7 +88,7 @@ us_cases <- us_cases %>%
 ```
 
 ### Tidy Us Deaths
-```{r, tidy_us_deaths}
+```{r, tidy_us_deaths, echo=FALSE, warning=FALSE}
 library(dplyr)
 library(lubridate)
 library(tidyr)
@@ -95,7 +104,7 @@ us_deaths <- us_deaths %>%
 ```
 
 ### Join us tables
-```{r, join_us_tables}
+```{r, join_us_tables, echo=FALSE, warning=FALSE}
 us <- us_cases %>%
   full_join(us_deaths)
 
@@ -110,7 +119,7 @@ us
 
 ### Combine global
 
-```{r, combine_global}
+```{r, combine_global, echo=FALSE, warning=FALSE}
 global <- global %>%
   unite(Combined_Key,
         c(Province_State, Country_Region),
@@ -120,18 +129,18 @@ global <- global %>%
 ```
 
 ### Filter global so only days with cases are visible
-```{r, positive_filter_global}
+```{r, positive_filter_global, echo=FALSE, warning=FALSE}
 global <- global %>% filter(cases > 0)
 ```
 
 ### Format UID 
-```{r, format_uid}
+```{r, format_uid, echo=FALSE, warning=FALSE}
 uid <- read.csv("../datasets/UID_ISO_FIPS_LookUp_Table.csv") %>%
   select(-c(Lat, Long_, Combined_Key, code3, iso2, iso3, Admin2))
 ```
 
 ### Join global and uid
-```{r, join_global_uid}
+```{r, join_global_uid, echo=FALSE, warning=FALSE}
 global <- global %>%
   left_join(uid, by = c("Province_State", "Country_Region")) %>%
   select(-c(UID, FIPS)) %>%
@@ -141,13 +150,13 @@ global <- global %>%
 ```
 
 ### Summary
-```{r, summary}
+```{r, summary, echo=FALSE, warning=FALSE}
 summary(us)
 summary(global)
 ```
 
 ### US By State
-```{r, us_by_state}
+```{r, us_by_state, echo=FALSE, warning=FALSE}
 us_by_state <- us %>%
   group_by(Province_State, Country_Region, date) %>%
   summarise(cases = sum(cases), deaths = sum(deaths),
@@ -159,7 +168,7 @@ us_by_state <- us %>%
 ```
 
 ### US totals
-```{r, us_by_totals}
+```{r, us_by_totals, echo=FALSE, warning=FALSE}
 us_totals <- us_by_state %>%
   group_by(Country_Region, date) %>%
   summarise(cases = sum(cases), deaths = sum(deaths),
@@ -171,7 +180,7 @@ us_totals <- us_by_state %>%
 ```
 
 ### Filter US totals
-```{r, filter_us_totals}
+```{r, filter_us_totals, echo=FALSE, warning=FALSE}
 library(ggplot2)
 library(scales)
 
@@ -189,7 +198,7 @@ us_totals %>%
 ```
 
 ### Cases By State
-```{r, cases_by_state}
+```{r, cases_by_state, echo=FALSE, warning=FALSE}
 library(stringr)
 state <- "New York"
 
@@ -209,7 +218,7 @@ us_by_state %>%
 ```
 
 ### New Cases
-```{r, new_cases}
+```{r, new_cases, echo=FALSE, warning=FALSE}
 us_by_state <- us_by_state %>%
   mutate(new_cases = cases - lag(cases),
          new_deaths = deaths - lag(deaths))
@@ -219,7 +228,7 @@ us_totals <- us_totals %>%
 ```
 
 ### Graph New Cases
-```{r, graph_new_cases}
+```{r, graph_new_cases, echo=FALSE, warning=FALSE}
 us_totals %>%
   ggplot(aes(x = date, y = new_cases)) +
   geom_line(aes(colour = "new_cases")) +
@@ -233,7 +242,7 @@ us_totals %>%
 ```
 
 ### Highest case rate in us
-```{r, highest_case_rate_us}
+```{r, highest_case_rate_us, echo=FALSE, warning=FALSE}
 us_state_totals <- us_by_state %>%
   group_by(Province_State) %>%
   summarise(deaths = max(deaths), cases = max(cases),
@@ -245,37 +254,41 @@ us_state_totals <- us_by_state %>%
 
 
 ###Highest Rate
-```{r, highest_case_rate}
+```{r, highest_case_rate, echo=FALSE, warning=FALSE}
 us_state_totals %>%
   slice_max(deaths_per_thou, n = 10)
 ```
 
 ### Lowest Rate
-```{r, lowest_case_rate, warning=FALSE}
+```{r, lowest_case_rate, warning=FALSE, echo=FALSE, warning=FALSE}
 us_state_totals %>%
   slice_min(deaths_per_thou, n = 10)
 ```
 
 ### Model deaths vs cases
-```{r, model_cases_deaths, warning=FALSE}
+```{r, model_cases_deaths, warning=FALSE, echo=FALSE, warning=FALSE}
 mod <- lm(deaths_per_thou ~ cases_per_thou, data = us_state_totals)
 summary(mod)
 ```
 
 ### Prediction vs actual on plot
-```{r, plot_prediction, warning=FALSE}
+```{r, plot_prediction, warning=FALSE, echo=FALSE, warning=FALSE}
 us_state_totals %>% mutate(pred = predict(mod))
 ```
 
 ### Create prediction table
-```{r, create_prediction_table, warning=FALSE}
+```{r, create_prediction_table, warning=FALSE, echo=FALSE, warning=FALSE}
 us_state_totals_predictions <- us_state_totals %>% 
   mutate(pred = predict(mod))
 ```
 
 ### Plot prediction vs actual
-```{r, plot_prediction_table, warning=FALSE}
+```{r, plot_prediction_table, warning=FALSE, echo=FALSE, warning=FALSE}
 us_state_totals_predictions %>% ggplot() + 
   geom_point(aes(x = cases_per_thou, y = deaths_per_thou), color = "blue") +
   geom_point(aes(x = cases_per_thou, y = pred), color = "red")
 ```
+
+# Conlusion
+
+#### This is a great dataset because it offers endless possiblities for manipulation and analysis. One source of bias I could forsee is in reporting. As data scientists, we can only analyze the data that is provided to us. If different places are reporting cases differently, it would effect our results.
