@@ -26,7 +26,7 @@ var specificNeighborhoods = [
 ];
 
 // Load GeoJSON data
-var geojsonLayer = new L.GeoJSON.AJAX("../data/neighbourhoods.geojson", {
+var geojsonLayer = new L.GeoJSON.AJAX("./data/neighbourhoods.geojson", {
     onEachFeature: function (feature, layer) {
         if (feature.properties && feature.properties.AREA_NAME) {
             layer.bindPopup("Neighbourhood: " + feature.properties.AREA_NAME);
@@ -39,7 +39,7 @@ var geojsonLayer = new L.GeoJSON.AJAX("../data/neighbourhoods.geojson", {
     style: function (feature) {
         var areaName = feature.properties.AREA_NAME;
         var isSpecific = specificNeighborhoods.includes(areaName);
-        var color = isSpecific ? "#ff7800" : "#0000ff";
+        var color = isSpecific ? "#228B22" : "#800080"; // Dark green for specific, Purple for non-specific
         return {
             color: color,
             weight: 2,
@@ -76,7 +76,7 @@ window.onclick = function(event) {
 
 // Load the neighborhood data from the JSON file
 var neighborhoodData;
-fetch('../data/neighborhood_data.json')
+fetch('./data/neighborhood_data.json')
     .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
