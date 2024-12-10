@@ -1,17 +1,18 @@
 ---
-title: "NYPD_shooting"
+title: "NYPD Shootings Analysis"
 author: "H. Justino"
-date: '2024-08-30'
+date: '2024-12-09'
 output:
   html_document:
     df_print: paged
+  pdf_document: default
 ---
 
-# NYPD Shooting Info
+# NYPD Crime Info
 
 
 ### Import Data into variable
-```{r, import_data_check, message=FALSE}
+```{r, import_data_check, echo=FALSE}
 file_path <- "../datasets/NYPD_Shooting_Incident_Data__Historic_.csv"
 if (file.exists(file_path)) {
   nypd_data <- read.csv(file_path)
@@ -21,32 +22,78 @@ if (file.exists(file_path)) {
 ```
 
 ### Summarize NYPD data
-```{r, summarize, message=FALSE}
+```{r, summarize, echo=FALSE}
 summary(nypd_data)
+head(nypd_data, 5)
 ```
 
 #Select Columns
-```{r, select_columns}
+```{r, select_columns, warning=FALSE, echo=FALSE}
 # Select relevant columns and filter out rows with NA or invalid values
 library(dplyr)
 
 nypd_data_filtered <- nypd_data %>%
   select(Longitude, Latitude, INCIDENT_KEY) %>%
   filter(!is.na(Longitude) & !is.na(Latitude) & Longitude >= -180 & Longitude <= 180 & Latitude >= -90 & Latitude <= 90)
+
+head(nypd_data_filtered, 5)
 ```
 
 # Plot points on the map
-```{r, plot_map}
+
+#### I want to plot where the incidents occur in the city. I used an interactive library.
+
+
+```{r, year_map, echo=FALSE}
+library(shiny)
 library(leaflet)
 
-# Create a leaflet map
-leaflet(nypd_data_filtered) %>%
-  addTiles() %>%
-  addCircleMarkers(~Longitude, ~Latitude, popup = ~as.character(INCIDENT_KEY), color = "red", radius = 5)
+# Select relevant columns and filter out rows with NA or invalid values
+library(dplyr)
+
+nypd_data_filtered_year <- nypd_data %>%
+  select(Longitude, Latitude, INCIDENT_KEY, OCCUR_DATE) %>%
+  filter(!is.na(Longitude) & !is.na(Latitude) & !is.na(OCCUR_DATE) & Longitude >= -180 & Longitude <= 180 & Latitude >= -90 & Latitude <= 90)
+
+
+# Convert OCCUR_DATE to Date type and extract year
+nypd_data_filtered_year$OCCUR_DATE <- as.Date(nypd_data_filtered_year$OCCUR_DATE, format="%m/%d/%Y")
+nypd_data_filtered_year$year <- format(nypd_data_filtered_year$OCCUR_DATE, "%Y")
+
+# Define UI for application
+ui <- fluidPage(
+  titlePanel("NYPD Shooting Incidents"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("year", "Select Year:", choices = sort(unique(nypd_data_filtered_year$year), decreasing = TRUE), selected = sort(unique(nypd_data_filtered_year$year), decreasing = TRUE)[1])
+    ),
+    mainPanel(
+      leafletOutput("map")
+    )
+  )
+)
+
+# Define server logic
+server <- function(input, output, session) {
+  filtered_data <- reactive({
+    nypd_data_filtered_year %>% filter(year == input$year)
+  })
+  
+  output$map <- renderLeaflet({
+    leaflet(filtered_data()) %>%
+      addTiles() %>%
+      addCircleMarkers(~Longitude, ~Latitude, popup = ~as.character(INCIDENT_KEY), color = "red", radius = 5)
+  })
+}
+
+# Run the application 
+shinyApp(ui = ui, server = server)
 ```
 
 # Pie chart based on Victim Sex
-```{r, victim_sex}
+
+#### Gender distribution of the victims of crime. Men are the overwhelming participants in crime.
+```{r, victim_sex, warning=FALSE, echo=FALSE}
 library(ggplot2)
 
 # Summarize data for pie chart
@@ -66,9 +113,12 @@ ggplot(vic_sex_summary, aes(x = "", y = count, fill = VIC_SEX)) +
             position = position_stack(vjust = 0.5)) +
   labs(title = "Distribution of Victim Sex", fill = "Victim Sex")
 ```
-# Display Crime Rate by Borough
-```{r, crime_rate_by_borough}
-  
+
+# Display Shooting Rate by Borough
+
+#### Nearly 40% of all shootings in the city happens in Brooklyn.
+```{r, crime_rate_by_borough, warning=FALSE, echo=FALSE}
+library(ggplot2)
   # Summarize data to calculate crime rate by borough
 borough_summary <- nypd_data %>%
   filter(!is.na(BORO)) %>%
@@ -83,3 +133,158 @@ ggplot(borough_summary, aes(x = reorder(BORO, -crime_rate), y = crime_rate, fill
   labs(title = "Percentage of Crime by Borough", x = "Borough", y = "Percentage of All Crime (%)") +
   theme_minimal()
 ```
+
+## Number of shootings by time of the day.
+
+#### There is a U-Shaped pattern, where shootings decrease during work hours. They increase in the evening peaking until midnight where they slowly decline until a shar decrease at 5am.
+```{r, crime_by_day, warning=FALSE, echo=FALSE}
+
+# Select relevant columns and filter out rows with NA or invalid values
+library(dplyr)
+
+nypd_data_filtered <- nypd_data %>%
+  select(OCCUR_TIME) %>%
+  filter(!is.na(OCCUR_TIME))
+
+# Convert OCCUR_TIME to a suitable format 
+nypd_data_filtered$hour <- as.numeric(substr(nypd_data_filtered$OCCUR_TIME, 1, 2))
+
+library(ggplot2)
+
+crime_time_plot <- nypd_data_filtered %>%
+  group_by(hour) %>%
+  summarise(count = n()) %>%
+  ggplot(aes(x = hour, y = count)) +
+  geom_line() +
+  scale_x_continuous(breaks = seq(0, 23, by = 2)) +
+  labs(title = "Distribution of shootings at Different Times of the Day",
+       x = "Hour of the Day",
+       y = "Number of Incidents") +
+  theme_minimal()
+
+# Print the plot
+print(crime_time_plot)
+```
+
+
+## Import NYC Census Data
+
+### From US Census Bureau: https://www.census.gov/quickfacts/fact/table/newyorkcountynewyork,richmondcountynewyork,kingscountynewyork,queenscountynewyork,bronxcountynewyork,newyorkcitynewyork/PST045222
+
+#### I imported NYC Census data because I want to analyze the rate at whcih shootings happen by borough. Brooklyn has an exceptionally high number of shootings, but does it match the population?
+```{r, census_summary, warning=FALSE, echo=FALSE}
+file_path <- "../datasets/census.csv"
+if (file.exists(file_path)) {
+  census_data <- read.csv(file_path)
+} else {
+  stop("File not found: ", file_path)
+}
+
+summary(census_data)
+
+head(census_data, 15)
+```
+
+#### Population of the city (2023 Estimate)
+```{r, population, warning=FALSE, echo=FALSE}
+
+# Select the columns with borough names and their population estimates
+population_estimates <- census_data %>%
+  select(`Fact`, `New.York.County..New.York`, `Richmond.County..New.York`, `Kings.County..New.York`, `Queens.County..New.York`, `Bronx.County..New.York`, `New.York.city..New.York`) %>%
+  filter(Fact == "Population estimates, July 1, 2023, (V2023)")
+
+
+# Rename columns to match the names in the crime data
+census_data <- census_data %>%
+  rename(
+    MANHATTAN = `New.York.County..New.York`,
+    STATEN_ISLAND = `Richmond.County..New.York`,
+    BROOKLYN = `Kings.County..New.York`,
+    QUEENS = `Queens.County..New.York`,
+    BRONX = `Bronx.County..New.York`,
+    NYC = `New.York.city..New.York`
+  )
+
+# Select the row with population estimates for all the boroughs
+population_estimates <- census_data %>%
+  filter(Fact == "Population estimates, July 1, 2023, (V2023)") %>%
+  select(Fact, MANHATTAN, STATEN_ISLAND, BROOKLYN, QUEENS, BRONX, NYC)
+
+# Print the selected row
+print(population_estimates)
+```
+
+### Summarize Shootings by Borough
+```{r, summarize_crimes_by_borough, warning=FALSE, echo=FALSE}
+library(dplyr)
+library(knitr)
+
+# Summarize data to calculate the number of shootings by borough
+borough_crime_summary <- nypd_data %>%
+  filter(!is.na(BORO)) %>%
+  group_by(BORO) %>%
+  summarise(crime_count = n()) %>%
+  arrange(desc(crime_count))
+
+# Display the summary as a table
+kable(borough_crime_summary, col.names = c("Borough", "Number of Shootings"), caption = "Number of Shootings by Borough")
+```
+
+
+### Summarize shootings by Borough and Calculate Crime Rates
+```{r, summarize_crimes_and_calculate_rates, message=FALSE, echo=FALSE}
+library(dplyr)
+library(knitr)
+
+# Summarize data to calculate the number of shootings by borough
+borough_crime_summary <- nypd_data %>%
+  filter(!is.na(BORO)) %>%
+  group_by(BORO) %>%
+  summarise(crime_count = n()) %>%
+  arrange(desc(crime_count))
+
+# Convert population estimates to numeric
+population_estimates <- population_estimates %>%
+  mutate(across(MANHATTAN:NYC, ~ as.numeric(gsub(",", "", .))))
+
+# Calculate crime rates per 100,000 people
+crime_rates <- borough_crime_summary %>%
+  mutate(
+    population = case_when(
+      BORO == "MANHATTAN" ~ population_estimates$MANHATTAN,
+      BORO == "STATEN ISLAND" ~ population_estimates$STATEN_ISLAND,
+      BORO == "BROOKLYN" ~ population_estimates$BROOKLYN,
+      BORO == "QUEENS" ~ population_estimates$QUEENS,
+      BORO == "BRONX" ~ population_estimates$BRONX,
+      TRUE ~ NA_real_
+    ),
+    crime_rate_per_100k = (crime_count / population) * 100000
+  )
+
+# Display the summary as a table
+kable(crime_rates, col.names = c("Borough", "Number of shootings", "Population", "Crime Rate per 100,000"), caption = "Crime Rates by Borough")
+
+```
+
+## Shooting Rate By Borough Graph
+
+#### We can see the order of the crime rate by borough in the city. Although Brooklyn has the most number of total shootings, it is second to Bronx in crime rate because of its large population. Notably Manhattan has a low crime rate, comparable to the lowest crime rate boroughs Queens, and Staten Island.
+```{r, plot_crime_rate, warning=FALSE, message=FALSE, echo=FALSE}
+library(dplyr)
+library(ggplot2)
+library(knitr)
+
+# Create a line chart for crime rates by borough
+crime_rate_plot <- ggplot(crime_rates, aes(x = reorder(BORO, -crime_rate_per_100k), y = crime_rate_per_100k, group = 1)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Crime Rates by Borough", x = "Borough", y = "Crime Rate per 100,000") +
+  theme_minimal()
+
+# Print the plot
+print(crime_rate_plot)
+```
+
+
+
+
