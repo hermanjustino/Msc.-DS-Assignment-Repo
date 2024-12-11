@@ -25,6 +25,12 @@ h1 {
     margin-bottom: 10px;
 }
 
+.heading {
+    text-align: left;
+    width: 100%; /* Ensure the heading takes the full width of the container */
+    margin-left: 0; /* Remove any default left margin */
+}
+
 p{
     width: 100%;
 }
