@@ -110,10 +110,10 @@ Where λ = 10 (cycle consistency weight)
 | Model Parameters | ~50M | 48M |
 
 ### Key Achievements
-- ✅ **Style Transfer Quality**: Convincing Monet-style transformations
-- ✅ **Content Preservation**: Maintained scene structure
-- ✅ **Diversity**: Wide variety of artistic interpretations
-- ✅ **Competition Compliance**: Met all technical requirements
+-  **Style Transfer Quality**: Convincing Monet-style transformations
+-  **Content Preservation**: Maintained scene structure
+-  **Diversity**: Wide variety of artistic interpretations
+-  **Competition Compliance**: Met all technical requirements
 
 ### Visual Results
 The model successfully learned to:
@@ -121,73 +121,6 @@ The model successfully learned to:
 - Transform color palettes to match impressionistic style
 - Preserve scene composition while adding artistic flair
 - Generate diverse outputs avoiding mode collapse
-
-## Technical Insights
-
-### What Worked Well
-1. **CycleGAN Architecture**: Excellent for unpaired style transfer
-2. **Instance Normalization**: Superior to batch normalization for style tasks
-3. **Cycle Consistency**: Prevented trivial solutions and mode collapse
-4. **Progressive Training**: Stable convergence over multiple epochs
-
-### Challenges Overcome
-1. **Mode Collapse**: Solved with proper loss balancing
-2. **Training Instability**: Addressed with careful learning rate tuning
-3. **Memory Constraints**: Optimized with efficient batching
-4. **Quality Control**: Monitored with regular sample generation
-
-## Project Structure
-
-```
-Monet-Painting-GAN/
-├── notebooks/
-│   └── index.ipynb              # Main implementation notebook
-├── data/                        # Kaggle competition data
-│   ├── monet_jpg/              # Monet paintings (if extracted)
-│   ├── photo_jpg/              # Photographs (if extracted)
-│   ├── monet_tfrec/            # Monet TFRecord files
-│   └── photo_tfrec/            # Photo TFRecord files
-├── models/                     # Saved model checkpoints
-├── generated/                  # Generated Monet-style images
-├── README.md                   # This file
-└── requirements.txt            # Python dependencies
-```
-
-## Getting Started
-
-### Prerequisites
-```bash
-pip install tensorflow>=2.8.0 matplotlib pillow numpy pandas
-```
-
-### Running the Project
-1. **Set up environment**
-   ```bash
-   git clone <repository-url>
-   cd Monet-Painting-GAN
-   ```
-
-2. **Download data**
-   - Get from [Kaggle Competition](https://www.kaggle.com/competitions/gan-getting-started/data)
-   - Extract to `data/` directory
-
-3. **Run notebook**
-   ```bash
-   jupyter notebook notebooks/index.ipynb
-   ```
-
-4. **For Kaggle submission**
-   - Use Kaggle Kernels with GPU/TPU
-   - Follow notebook for complete implementation
-
-## Competition Submission
-
-### Generation Process
-1. **Load trained Generator G model**
-2. **Process input photos in batches**
-3. **Apply style transfer transformation**
-4. **Save 7,000-10,000 images as JPG**
-5. **Package into images.zip file**
 
 ### Submission Format
 - **File count**: 7,000-10,000 images
@@ -210,19 +143,6 @@ pip install tensorflow>=2.8.0 matplotlib pillow numpy pandas
 3. **Feature Matching**: Additional loss terms
 4. **Color Consistency**: Better color preservation
 
-## Academic Context
-
-### Assignment Requirements (125 points)
-- **Problem Description & EDA** (25 points): ✅ Completed
-- **GAN Architecture Implementation** (40 points): ✅ Completed  
-- **Training & Results Analysis** (35 points): ✅ Completed
-- **Documentation & GitHub** (25 points): ✅ Completed
-
-### Learning Objectives
-- **GAN Theory**: Understanding adversarial training
-- **Style Transfer**: Artistic domain adaptation
-- **Deep Learning**: Advanced neural architectures
-- **Competition Skills**: Real-world ML challenges
 
 ## References
 
@@ -230,11 +150,6 @@ pip install tensorflow>=2.8.0 matplotlib pillow numpy pandas
 - [Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks](https://arxiv.org/abs/1703.10593)
 - [Image-to-Image Translation with Conditional Adversarial Networks](https://arxiv.org/abs/1611.07004)
 - [Generative Adversarial Networks](https://arxiv.org/abs/1406.2661)
-
-### Useful Resources
-- [TensorFlow GAN Tutorial](https://www.tensorflow.org/tutorials/generative/cyclegan)
-- [Kaggle CycleGAN Notebook](https://www.kaggle.com/amyjang/monet-cyclegan-tutorial)
-- [PyTorch CycleGAN Implementation](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix)
 
 ## Contact
 
