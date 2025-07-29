@@ -1,0 +1,130 @@
+Overview
+Predict Supercars Prices 2025
+Welcome to the Predict Supercars Prices 2025 competition!
+
+Your goal is to build a machine learning model that accurately predicts the market price of supercars based on detailed specifications, condition, and service history.
+
+Using a rich dataset of supercars from 2020 to 2025, including features like engine type, horsepower, damage history, warranty status, and more, you will train your model to estimate the price in USD.
+
+This competition challenges your ability to extract meaningful insights from complex automotive data and deliver precise price predictions.
+
+Good luck, and have fun!
+
+Start
+
+21 days ago
+Close
+2 months to go
+Description
+Predict Supercars Prices 2025
+About the Domain
+The supercar market is highly dynamic and complex, influenced by numerous factors such as brand prestige, technical specifications, condition, and historical maintenance. Predicting the price of supercars is a challenging regression problem due to the diversity of features and the impact of vehicle history.
+
+Supercars are high-performance vehicles known for their powerful engines, advanced aerodynamics, and luxurious materials. Their prices fluctuate based on factors including damage history, mileage, engine type, and rarity (e.g., limited editions).
+
+Problem Statement
+In this competition, your task is to build a predictive model that estimates the market price of supercars from 2020 to 2025. You will be provided with a detailed dataset containing over 30 features describing each vehicle, including:
+
+Brand and model name
+Year of manufacture
+Engine configuration (V8, V10, V12, Electric, etc.)
+Horsepower and torque
+Damage history and repair costs
+Warranty status and years remaining
+Service history (authorized or independent)
+Mileage and number of previous owners
+Exterior and interior details (color, materials, carbon fiber body parts)
+Tire and brake specifications
+Limited edition status and aero package presence
+Your model should accurately predict the selling price in USD, considering all the above factors.
+
+Dataset
+The dataset includes:
+
+Training data: Features and the target price for 2,000 supercars.
+Test data: Similar features without price information, for which you will generate predictions.
+Sample submission: Format example for submitting your predictions.
+Evaluation Metric
+Your submissions will be evaluated using Root Mean Squared Error (RMSE) between the predicted and actual prices. Lower RMSE indicates better performance.
+
+Why Participate?
+This competition offers a realistic, complex regression challenge in the automotive domain, ideal for practicing feature engineering, handling missing data, and model tuning with high-dimensional data.
+
+Good luck, and enjoy predicting supercar prices!
+
+Evaluation
+Submissions are evaluated using Root Mean Squared Error (RMSE) between the predicted prices and the actual sale prices:
+
+
+Where:
+
+( y_i ) is the true price of the ( i^{th} ) car
+( \hat{y}_i ) is your predicted price
+( n ) is the number of samples in the test set
+A lower RMSE means your predictions are closer to the real prices.
+
+📤 Submission File Format
+Your submission should be a CSV file with 2 columns:
+
+ID	price
+car_uniqueid1	350000.00
+car_uniqueid2	1250000.00
+car_uniqueid3	475000.00
+…	…
+ID corresponds to the unique identifier of each supercar in the test set.
+price is your predicted sale price for that car (in USD, float format).
+✅ Important Notes:
+
+The file must include a header row.
+The order of rows does MATTER, as long as all test IDs are included.
+Citation
+vlad andrei. Predict Car Prices 2025 . https://kaggle.com/competitions/predict-supercars-prices-2025, 2025. Kaggle.
+
+Dataset Description
+In this competition, you'll predict the sale price of high-end supercars based on a rich set of technical, aesthetic, and historical attributes. The dataset contains both numeric and categorical features commonly associated with premium performance vehicles — from horsepower and drivetrain to service history and damage reports.
+
+📁 Files
+supercar_train.csv — the training set, including features and the target variable price.
+supercar_test.csv — the test set, with the same structure as train.csv, but without the price column.
+sample_submission.csv — a sample of how your submission should be formatted.
+🧠 Target Variable
+price: The final sale price of the supercar (in USD). This is what you are trying to predict.
+📊 Columns
+Column	Description
+ID	Unique identifier for each car (integer)
+year	Year of production (2020–2025)
+brand	Brand of the supercar (e.g., Ferrari, Lamborghini, Bugatti, etc.)
+model	Specific model of the car
+color	Exterior color of the car
+carbon_fiber_body	Whether the body is made from carbon fiber (0 = No, 1 = Yes)
+engine_config	Engine type (e.g., V8, V12, Electric, Hybrid)
+horsepower	Engine horsepower
+torque	Engine torque (Nm)
+weight_kg	Weight of the car in kilograms
+zero_to_60_s	Time to accelerate from 0 to 60 mph (in seconds)
+top_speed_mph	Maximum speed (in mph)
+num_doors	Number of doors (2 or 4)
+transmission	Transmission type (manual, automatic, dual-clutch)
+drivetrain	Drivetrain configuration (RWD, AWD)
+market_region	Region where the car was sold (e.g., Europe, Asia)
+mileage	Total miles driven
+num_owners	Number of previous owners
+interior_material	Interior material (leather, suede, carbon_fiber, etc.)
+brake_type	Type of brakes used (carbon-ceramic, steel)
+tire_brand	Brand of tires currently installed
+aero_package	Whether the car has an aerodynamic package (0 = No, 1 = Yes)
+limited_edition	Whether it is a limited-edition model (0 = No, 1 = Yes)
+has_warranty	Whether the car still has an active warranty (0 = No, 1 = Yes)
+warranty_years	Years of warranty remaining (if any)
+last_service_date	Date of last service
+service_history	Type of service history (authorized, independent, none)
+non_original_parts	Number of aftermarket or replaced parts
+damage	Whether the car has reported damage (0 = No, 1 = Yes)
+damage_cost	Estimated cost of repairs (only if damage = 1)
+damage_type	Type of damage (minor, major, totaled)
+📌 Notes
+All prices are in USD.
+Some rows may contain missing or zero values (e.g., damage-related fields).
+The test set contains the same features but does not include price as you already know.
+The goal is to predict the price of each car in the test set as accurately as possible.
+
