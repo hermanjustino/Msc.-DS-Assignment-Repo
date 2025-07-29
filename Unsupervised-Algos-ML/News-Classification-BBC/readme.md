@@ -1,3 +1,5 @@
+
+
 # BBC News Classification Project
 
 This directory contains work related to unsupervised machine learning algorithms applied to BBC news classification.
@@ -11,4 +13,3 @@ Work in progress.
 - Text classification approaches
 - Evaluation metrics and results
 
-*Project details to be added.*
