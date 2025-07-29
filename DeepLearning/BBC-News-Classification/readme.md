@@ -40,15 +40,6 @@ This project is part of a Deep Learning course assignment focusing on:
 | **Evaluation** | Accuracy |
 | **Text Length** | Variable (avg ~500 words) |
 
-### File Structure
-```
-data/
-├── BBC News Train.csv           # Training dataset with labels
-├── BBC News Test.csv            # Test dataset for predictions  
-├── BBC News Sample Solution.csv # Sample submission format
-├── submission_supervised.csv    # Generated supervised predictions
-└── submission_nmf.csv          # Generated NMF predictions
-```
 
 ## Methodology
 
@@ -88,63 +79,6 @@ data/
 - **Large Data (70-100%)**: Supervised learning shows clear advantage
 - **Crossover Point**: Supervised becomes superior with >50% labeled data
 
-### When to Use Each Approach
-
-#### Matrix Factorization (NMF)
-✅ **Use When:**
-- Limited or no labeled data available
-- Need interpretable topic discovery
-- Exploratory data analysis
-- Cost of labeling is high
-
-❌ **Avoid When:**
-- Abundant labeled data available
-- Maximum accuracy is critical
-- Production systems requiring reliability
-
-#### Supervised Learning
-✅ **Use When:**
-- Sufficient labeled data available
-- Accuracy is the primary concern
-- Production classification systems
-- Well-defined classification task
-
-❌ **Avoid When:**
-- Very limited labeled data
-- Need to discover unknown patterns
-- Labels are expensive to obtain
-
-## Technical Implementation
-
-### Dependencies
-```python
-pandas>=1.4.0
-numpy>=1.21.0
-scikit-learn>=1.0.0
-matplotlib>=3.5.0
-seaborn>=0.11.0
-```
-
-### Setup Instructions
-1. **Clone Repository**
-   ```bash
-   git clone <repository-url>
-   cd BBC-News-Classification
-   ```
-
-2. **Install Dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Prepare Data**
-   - Download competition data from Kaggle
-   - Place CSV files in `data/` directory
-
-4. **Run Analysis**
-   ```bash
-   jupyter notebook notebooks/bbc_news_classification.ipynb
-   ```
 
 ## Results Analysis
 
